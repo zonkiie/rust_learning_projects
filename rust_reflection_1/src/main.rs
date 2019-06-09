@@ -1,4 +1,5 @@
 /// https://stackoverflow.com/questions/29986057/is-there-is-a-way-to-get-the-field-names-of-a-struct-in-a-macro/29986760#29986760
+/// https://stackoverflow.com/questions/37140768/how-to-get-struct-field-names-in-rust
 
 macro_rules! my_macro {
     (struct $name:ident {
