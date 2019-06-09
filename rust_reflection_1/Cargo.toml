@@ -1,0 +1,7 @@
+[package]
+name = "rust_reflection_1"
+version = "0.1.0"
+authors = ["Rainer Datzer <rdatz@gmx.de>"]
+edition = "2018"
+
+[dependencies]
