@@ -1,0 +1,41 @@
+/*fn main() {
+    println!("Hello, world!");
+}
+*/
+/// https://stackoverflow.com/questions/20445975/is-reflection-possible-in-rust-and-if-so-how-can-i-invoke-an-unknown-function-w
+
+trait SomeInterface
+{
+    fn exposed1(&self, a: &str) -> bool;
+    fn exposed2(&self, b: int) -> int;
+}
+
+struct Implementation1
+{
+    value: int,
+    hasFoo: bool
+}
+
+impl SomeInterface for Implementation1
+{   
+    fn exposed1(&self, a: &str) -> bool
+    {
+        self.hasFoo
+    }
+
+    fn exposed2(&self, b: int) -> int
+    {
+        self.value * b
+    }
+}
+
+fn test_interface(obj: &SomeInterface)
+{   
+    println!("{}", obj.exposed2(3));
+}
+
+fn main()
+{   
+    let impl1 = Implementation1 { value: 1, hasFoo: false };
+    test_interface(&impl1);
+}
