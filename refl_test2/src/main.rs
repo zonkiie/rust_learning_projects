@@ -20,19 +20,26 @@ use serde_value::Value;
 use quick_xml::de::{from_str, DeError};
 use quick_xml::se::to_string;
 
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
+//#[derive(Serialize, Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq)]
 struct Point {
 	x: i32,
 	y: i32
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq)]
 struct Point2 {
 	x: i32,
 	y: i32
 }
 
-#[derive(Serialize, Deserialize, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, PartialEq)]
+struct Line {
+	p1: Point,
+	p2: Point
+}
+
+#[derive(Serialize, Deserialize, PartialEq)]
 struct World(Vec<Point>);
 
 impl From<Point> for Point2 {
@@ -48,12 +55,11 @@ impl From<&Point> for Point2 {
 }
 
 fn main() {
-	println!("Hello, world!");
-	let p = Point {x:12, y:23};
-	//let encoded: Vec<u8> = bincode::serialize(&p).unwrap();
-	println!("{:?}",  p);
-	println!("{:?}",  Point2::from(&p));
-	//println!("Encoded: {:?}", encoded);
-	let str = to_string(&p).unwrap();
-	println!("String: {:?}", str);
+	//let p = Point {x:12, y:23};
+	//let str = to_string(&p).unwrap();
+	//println!("String: {:?}", str);
+	let str = to_string(&Point {x:12, y:23}).unwrap();
+	println!("String: {}", str);
+	let str = to_string(&Line {p1: Point {x:1, y:1}, p2: Point {x:15, y:15}}).unwrap();
+	println!("Line: {}", str);
 }
