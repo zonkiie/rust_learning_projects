@@ -1,0 +1,9 @@
+-- Your SQL goes here
+
+CREATE TABLE users
+(
+  id INTEGER NOT NULL PRIMARY KEY,
+  first_name VARCHAR NOT NULL,
+  last_name VARCHAR NOT NULL,
+  ctime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
