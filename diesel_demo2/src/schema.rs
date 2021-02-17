@@ -5,7 +5,7 @@ table! {
         body -> Text,
         published -> Bool,
         ctime -> Timestamp,
-        owner_id -> Nullable<Integer>,
+        owner_id -> Integer,
     }
 }
 

@@ -9,7 +9,9 @@ mod tests {
 */
 
 #![allow(unused_imports)]
+#![recursion_limit="256"]
 
+#[macro_use] extern crate diesel;
 extern crate serde_derive;
 extern crate serde;
 extern crate serde_json;
@@ -29,7 +31,8 @@ use serde_value::Value;
 use quick_xml::de::{from_str, DeError};
 use quick_xml::se::to_string;
 
-use models::NewPost;
+use models::*;
+use self::models::*;
 
 pub fn establish_connection() -> SqliteConnection {
 	dotenv().ok();
@@ -39,10 +42,11 @@ pub fn establish_connection() -> SqliteConnection {
 		.unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-pub fn create_post(conn: &SqliteConnection, title: &str, body: &str) -> usize {
-	use crate::schema::posts;
+pub fn create_post(conn: &SqliteConnection, title: &str, body: &str, owner_id: &i32) -> usize {
+	//use crate::schema::posts;
+	use crate::schema::*;
 
-	let new_post = NewPost { title, body };
+	let new_post = NewPost { title, body, owner_id };
 
 	diesel::insert_into(posts::table)
 		.values(&new_post)

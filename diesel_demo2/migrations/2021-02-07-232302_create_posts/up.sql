@@ -7,6 +7,6 @@ CREATE TABLE posts
   body TEXT NOT NULL,
   published BOOLEAN NOT NULL DEFAULT 0,
   ctime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  owner_id INTEGER,
+  owner_id INTEGER NOT NULL,
   FOREIGN KEY (owner_id) REFERENCES users (id)
 );

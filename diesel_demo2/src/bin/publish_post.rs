@@ -1,9 +1,9 @@
 use diesel::prelude::*;
-use diesel_demo_step_3_sqlite::*;
+use diesel_demo2::*;
 use std::env::args;
 
 fn main() {
-    use diesel_demo_step_3_sqlite::schema::posts::dsl::{posts, published};
+    use diesel_demo2::schema::posts::dsl::{posts, published};
 
     let id = args()
         .nth(1)
