@@ -8,8 +8,9 @@ use diesel::*;
 use diesel::prelude::*;
 use diesel::sql_types::*;
 
-#[derive(Identifiable, Queryable, Associations)]
+#[derive(Identifiable, Queryable, Associations, PartialEq, Serialize, Deserialize, Debug)]
 #[belongs_to(User, foreign_key="owner_id")]
+#[table_name = "posts"]
 pub struct Post {
     pub id: i32,
     pub title: String,
@@ -28,7 +29,8 @@ pub struct NewPost<'a> {
     pub owner_id: &'a i32,
 }
 
-#[derive(Identifiable, Queryable, Associations)]
+#[derive(Identifiable, Queryable, Associations, PartialEq, Serialize, Deserialize, Debug)]
+#[table_name = "users"]
 pub struct User {
 	pub id: i32,
 	pub first_name: String,
