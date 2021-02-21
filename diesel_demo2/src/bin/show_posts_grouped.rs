@@ -15,14 +15,14 @@ use serde_value::*;
 use quick_xml::de::*;
 use quick_xml::se::*;
 
-use schema::{users, posts};
+use schema::*;
 use diesel::*;
 use diesel::prelude::*;
 use diesel_demo2::models::*;
 use diesel_demo2::*;
 
 
-//fn main() -> std::io::Result<(), std::io::Error> {
+//fn main() -> std::result::Result<(), std::io::Error> {
 fn main() -> std::result::Result<(), Box<dyn Error>> {
     use diesel_demo2::schema::posts::dsl::*;
 
@@ -33,7 +33,10 @@ fn main() -> std::result::Result<(), Box<dyn Error>> {
 		.load::<Post>(&connection)?
 		.grouped_by(&users);
 	let data = users.into_iter().zip(userposts).collect::<Vec<_>>();
-	println!("Data: {:?}", data);
-	// let str = to_string(&data).unwrap(); println!("Line: {}", str);
+	//println!("Data: {:?}", data);
+	// This is the way to serialize simple structs with serde
+	//let str = to_string(&data).unwrap(); println!("Line: {}", str);
+	let str = serde_json::to_string(&data)?; println!("Line: {}", str);
+	// no semikolon when returning values
 	Ok(())
 }	
