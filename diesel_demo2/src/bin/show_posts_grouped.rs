@@ -18,11 +18,11 @@ use quick_xml::se::*;
 use schema::*;
 use diesel::*;
 use diesel::prelude::*;
-use diesel_demo2::models::*;
+use models::*;
 use diesel_demo2::*;
 
 fn main() -> std::result::Result<(), Box<dyn Error>> {
-    use diesel_demo2::schema::posts::dsl::*;
+    use schema::posts::dsl::*;
 
     let connection = establish_connection();
     let users = users::table.load::<User>(&connection)?;
