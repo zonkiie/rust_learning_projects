@@ -36,5 +36,15 @@ fn main() -> std::result::Result<(), Box<dyn Error>> {
 	let str = serde_json::to_string(&data)?;
 	println!("Line: {}", str);
 	// no semikolon when returning values
+	
+	// from: https://github.com/diesel-rs/diesel/issues/89
+	let data2 = users.left_outer_joins(posts::table).load(&connection)
+		.group_by(|(user, post)| user)
+		.map(|(user, posts)| posts.into_iter().filter_map(|p| p).collect())
+		.collect();
+	let str2 = serde_json::to_string(&data2)?;
+	println!("Line: {}", str);
+	
+	
 	Ok(())
 }	
