@@ -3,8 +3,7 @@
 extern crate rbatis;
 extern crate tokio;
 
-use chrono::prelude::*;
-use chrono::{NaiveDateTime, Local};
+use chrono::{NaiveDateTime};
 use rbatis::crud::CRUD;
 use rbatis::rbatis::Rbatis;
 use rbatis::Error;
@@ -45,12 +44,15 @@ pub struct BizActivity {
 
 #[tokio::main]
 async fn main() {
-  /// enable log crate to show sql logs
-  fast_log::init_log("requests.log", 1000, log::Level::Info, None, true);
-  /// initialize rbatis. May use `lazy_static` crate to define rbatis as a global variable because rbatis is thread safe
-  let rb = Rbatis::new();
-  /// connect to database  
-  rb.link("sqlite://:memory:").await.unwrap();
+	/// enable log crate to show sql logs
+	fast_log::init_log("requests.log", 1000, log::Level::Info, None, true);
+	/// initialize rbatis. May use `lazy_static` crate to define rbatis as a global variable because rbatis is thread safe
+	let rb = Rbatis::new();
+	/// connect to database  
+	rb.link("sqlite://:memory:").await.unwrap();
+  
+	rb.exec("", "CREATE TABLE `biz_activity` ( `id` varchar(50) NOT NULL DEFAULT '', `name` varchar(255) NOT NULL, `pc_link` varchar(255) DEFAULT NULL, `h5_link` varchar(255) DEFAULT NULL, `sort` varchar(255) NOT NULL, `status` int(11) NOT NULL, `version` int(11) NOT NULL, `remark` varchar(255) DEFAULT NULL, `create_time` datetime NOT NULL, `delete_flag` int(1) NOT NULL, `pc_banner_img` varchar(255) DEFAULT NULL, `h5_banner_img` varchar(255) DEFAULT NULL, PRIMARY KEY (`id`) );").await;
+
   /// customize connection pool parameters (optional)
 // let mut opt =PoolOptions::new();
 // opt.max_size=100;
