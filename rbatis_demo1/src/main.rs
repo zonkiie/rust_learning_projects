@@ -3,7 +3,12 @@
 extern crate rbatis;
 extern crate tokio;
 
+use chrono::prelude::*;
+use chrono::{NaiveDateTime, Local};
 use rbatis::crud::CRUD;
+use rbatis::rbatis::Rbatis;
+use rbatis::Error;
+//use crate::rbatis::rbatis_core::value::DateTimeNow;
 
 /// may also write `CRUDTable` as `impl CRUDTable for BizActivity{}`
 /// #[crud_enable( table_name:biz_activity)]
@@ -69,16 +74,29 @@ async fn main() {
     id: Some("12312".to_string()),
     name: None,
     remark: None,
-    create_time: Some(NaiveDateTime::now()),
+    
+    //create_time: Some(NaiveDateTime::new()),
+    create_time: Some(chrono::Local::now().naive_local()),
     version: Some(1),
     delete_flag: Some(1),
+    
+    // Why must these fields be given?
+    
+    h5_link: None,
+    pc_link: None,
+    pc_banner_img: None,
+    h5_banner_img: None,
+    sort: None,
+    status: None,
+    
+    
   };
   /// saving
   rb.save("", &activity).await;
 //Exec ==> INSERT INTO biz_activity (create_time,delete_flag,h5_banner_img,h5_link,id,name,pc_banner_img,pc_link,remark,sort,status,version) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )
 
   /// batch saving
-  rb.save_batch("", &vec![activity]).await;
+  // rb.save_batch("", &vec![activity]).await;
 //Exec ==> INSERT INTO biz_activity (create_time,delete_flag,h5_banner_img,h5_link,id,name,pc_banner_img,pc_link,remark,sort,status,version) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ),( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )
 
   /// The query, Option wrapper, is None if the data is not found
@@ -86,11 +104,13 @@ async fn main() {
 //Query ==> SELECT create_time,delete_flag,h5_banner_img,h5_link,id,name,pc_banner_img,pc_link,remark,sort,status,version  FROM biz_activity WHERE delete_flag = 1  AND id =  ? 
 
   /// query all
-  let result: Vec<BizActivity> = rb.list("").await.unwrap();
+  //let result: Vec<BizActivity> = rb.list("").await.unwrap();
+  let result: Vec<BizActivity> = rb.fetch_list("").await.unwrap();
 //Query ==> SELECT create_time,delete_flag,h5_banner_img,h5_link,id,name,pc_banner_img,pc_link,remark,sort,status,version  FROM biz_activity WHERE delete_flag = 1
 
   ///query by id vec
-  let result: Vec<BizActivity> = rb.list_by_ids("", &["1".to_string()]).await.unwrap();
+  //let result: Vec<BizActivity> = rb.list_by_ids("", &["1".to_string()]).await.unwrap();
+  let result: Vec<BizActivity> = rb.fetch_list_by_ids("", &["1".to_string()]).await.unwrap();
 //Query ==> SELECT create_time,delete_flag,h5_banner_img,h5_link,id,name,pc_banner_img,pc_link,remark,sort,status,version  FROM biz_activity WHERE delete_flag = 1  AND id IN  (?) 
 
   ///query by wrapper
@@ -110,6 +130,7 @@ async fn main() {
   ///if version_lock plugin actived,update method will modify field 'version'= version + 1
   let mut activity = activity.clone();
   let w = rb.new_wrapper().eq("id", "12312");
-  rb.update_by_wrapper("", &mut activity, &w).await;
+  //rb.update_by_wrapper("", &mut activity, &w).await;
+  rb.update_by_wrapper("", &mut activity, &w, false).await;
 //Exec ==> UPDATE biz_activity SET  create_time =  ? , delete_flag =  ? , status =  ? , version =  ?  WHERE id =  ? 
 }
