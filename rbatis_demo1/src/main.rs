@@ -6,8 +6,19 @@ extern crate tokio;
 use chrono::{NaiveDateTime};
 use rbatis::crud::CRUD;
 use rbatis::rbatis::Rbatis;
+use rbatis::utils::table_util::FatherChildRelationship;
 use rbatis::Error;
 //use crate::rbatis::rbatis_core::value::DateTimeNow;
+
+#[crud_enable]
+#[derive(Clone, Debug)]
+pub struct ActivityOptions {
+	pub id: Option<String>,
+	pub activity_id: Option<String>,
+	pub name: Option<String>,
+	pub value: Option<String>,
+}
+
 
 /// may also write `CRUDTable` as `impl CRUDTable for BizActivity{}`
 /// #[crud_enable( table_name:biz_activity)]
@@ -27,6 +38,9 @@ pub struct BizActivity {
   pub create_time: Option<NaiveDateTime>,
   pub version: Option<i32>,
   pub delete_flag: Option<i32>,
+  pub parent_id: Option<String>,
+  pub childs: Vec<BizActivity>,
+  pub activity_options: Vec<ActivityOptions>,
 }
 
 // (optional) manually implement instead of using `derive(CRUDTable)`. This allows manually rewriting `table_name()` function and supports  code completion in IDE.
@@ -41,6 +55,14 @@ pub struct BizActivity {
 //    }
 //}
 
+impl FatherChildRelationship for BizActivity {
+		fn get_father_id(&self) -> Option<&Self::IdType> {
+			self.parent_id.as_ref()
+		}
+		fn set_childs(&mut self, arg: Vec<Self>) {
+			self.childs = arg;
+		}
+	}
 
 #[tokio::main]
 async fn main() {
@@ -51,7 +73,7 @@ async fn main() {
 	/// connect to database  
 	rb.link("sqlite://:memory:").await.unwrap();
   
-	rb.exec("", "CREATE TABLE `biz_activity` ( `id` varchar(50) NOT NULL DEFAULT '', `name` varchar(255) NOT NULL, `pc_link` varchar(255) DEFAULT NULL, `h5_link` varchar(255) DEFAULT NULL, `sort` varchar(255) NOT NULL, `status` int(11) NOT NULL, `version` int(11) NOT NULL, `remark` varchar(255) DEFAULT NULL, `create_time` datetime NOT NULL, `delete_flag` int(1) NOT NULL, `pc_banner_img` varchar(255) DEFAULT NULL, `h5_banner_img` varchar(255) DEFAULT NULL, PRIMARY KEY (`id`) );").await;
+	rb.exec("", "CREATE TABLE `biz_activity` ( `id` varchar(50) NOT NULL DEFAULT '', `name` varchar(255) NOT NULL, `pc_link` varchar(255) DEFAULT NULL, `h5_link` varchar(255) DEFAULT NULL, `sort` varchar(255) NOT NULL, `status` int(11) NOT NULL, `version` int(11) NOT NULL, `remark` varchar(255) DEFAULT NULL, `create_time` datetime NOT NULL, `delete_flag` int(1) NOT NULL, `pc_banner_img` varchar(255) DEFAULT NULL, `h5_banner_img` varchar(255) DEFAULT NULL, parent_id varchar(50) DEFAULT NULL, PRIMARY KEY (`id`) );").await;
 
   /// customize connection pool parameters (optional)
 // let mut opt =PoolOptions::new();
@@ -72,10 +94,32 @@ async fn main() {
           .order_by(true, &["id", "name"])//sql:  group by id,name
           ;
 
+//   let activity = BizActivity {
+//     id: Some("12312".to_string()),
+//     name: None,
+//     remark: None,
+//     
+//     //create_time: Some(NaiveDateTime::new()),
+//     create_time: Some(chrono::Local::now().naive_local()),
+//     version: Some(1),
+//     delete_flag: Some(1),
+//     
+//     // Why must these fields be given?
+//     
+//     h5_link: None,
+//     pc_link: None,
+//     pc_banner_img: None,
+//     h5_banner_img: None,
+//     sort: None,
+//     status: None,
+//     
+//     
+//   };
+  
   let activity = BizActivity {
     id: Some("12312".to_string()),
-    name: None,
-    remark: None,
+    name: Some("MyName".to_string()),
+    remark: Some("MyRemark".to_string()),
     
     //create_time: Some(NaiveDateTime::new()),
     create_time: Some(chrono::Local::now().naive_local()),
@@ -88,11 +132,14 @@ async fn main() {
     pc_link: None,
     pc_banner_img: None,
     h5_banner_img: None,
-    sort: None,
-    status: None,
-    
+    sort: Some("MySort".to_string()),
+    status: Some(1),
+    parent_id: None,
+    childs: vec![],
+    activity_options: vec![],
     
   };
+  
   /// saving
   rb.save("", &activity).await;
 //Exec ==> INSERT INTO biz_activity (create_time,delete_flag,h5_banner_img,h5_link,id,name,pc_banner_img,pc_link,remark,sort,status,version) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )
