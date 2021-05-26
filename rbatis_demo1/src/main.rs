@@ -140,8 +140,41 @@ async fn main() {
     
   };
   
+  let child_activity = BizActivity {
+    id: Some("12313".to_string()),
+    name: Some("MyChildName".to_string()),
+    remark: Some("MyChildRemark".to_string()),
+    
+    //create_time: Some(NaiveDateTime::new()),
+    create_time: Some(chrono::Local::now().naive_local()),
+    version: Some(1),
+    delete_flag: Some(1),
+    
+    // Why must these fields be given?
+    
+    h5_link: None,
+    pc_link: None,
+    pc_banner_img: None,
+    h5_banner_img: None,
+    sort: Some("MySort".to_string()),
+    status: Some(1),
+    parent_id: Some("12312".to_string()),
+    childs: vec![],
+    activity_options: vec![],
+    
+  };
+  
   /// saving
   rb.save("", &activity).await;
+  rb.save("", &child_activity).await;
+  // Added for Father Child Relations
+  
+	let childs=vec![child_activity];
+	let all_record = rbatis::make_table_field_map!(childs,id);
+	activity.recursive_set_childs(&all_record);
+	println!("{:#?}", activity);
+	
+	
 //Exec ==> INSERT INTO biz_activity (create_time,delete_flag,h5_banner_img,h5_link,id,name,pc_banner_img,pc_link,remark,sort,status,version) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? )
 
   /// batch saving
