@@ -116,7 +116,7 @@ async fn main() {
 //     
 //   };
   
-  let activity = BizActivity {
+  let mut activity = BizActivity {
     id: Some("12312".to_string()),
     name: Some("MyName".to_string()),
     remark: Some("MyRemark".to_string()),
@@ -140,7 +140,7 @@ async fn main() {
     
   };
   
-  let child_activity = BizActivity {
+  let mut child_activity = BizActivity {
     id: Some("12313".to_string()),
     name: Some("MyChildName".to_string()),
     remark: Some("MyChildRemark".to_string()),
@@ -171,7 +171,8 @@ async fn main() {
   
 	let childs=vec![child_activity];
 	let all_record = rbatis::make_table_field_map!(childs,id);
-	activity.recursive_set_childs(&all_record);
+	//activity.recursive_set_childs(&all_record);
+	activity.set_childs_recursive(&all_record);
 	println!("{:#?}", activity);
 	
 	
