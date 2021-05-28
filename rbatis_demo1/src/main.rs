@@ -56,13 +56,13 @@ pub struct BizActivity {
 //}
 
 impl FatherChildRelationship for BizActivity {
-		fn get_father_id(&self) -> Option<&Self::IdType> {
-			self.parent_id.as_ref()
-		}
-		fn set_childs(&mut self, arg: Vec<Self>) {
-			self.childs = arg;
-		}
+	fn get_father_id(&self) -> Option<&Self::IdType> {
+		self.parent_id.as_ref()
 	}
+	fn set_childs(&mut self, arg: Vec<Self>) {
+		self.childs = arg;
+	}
+}
 
 #[tokio::main]
 async fn main() {
