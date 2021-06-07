@@ -10,11 +10,12 @@ use rbatis::utils::table_util::FatherChildRelationship;
 use rbatis::Error;
 //use crate::rbatis::rbatis_core::value::DateTimeNow;
 
-#[crud_enable]
+#[crud_enable( table_name:activity_options)]
 #[derive(Clone, Debug)]
 pub struct ActivityOptions {
 	pub id: Option<String>,
 	pub activity_id: Option<String>,
+	pub create_time: Option<NaiveDateTime>,
 	pub name: Option<String>,
 	pub value: Option<String>,
 }
@@ -23,7 +24,7 @@ pub struct ActivityOptions {
 /// may also write `CRUDTable` as `impl CRUDTable for BizActivity{}`
 /// #[crud_enable( table_name:biz_activity)]
 /// #[crud_enable(id_name:"id"|id_type:"String"|table_name:"biz_activity"|table_columns:"id,name,version,delete_flag"|formats_pg:"id:{}::uuid")]
-#[crud_enable]
+#[crud_enable( table_name:biz_activity)]
 #[derive(Clone, Debug)]
 pub struct BizActivity {
   pub id: Option<String>,
@@ -74,6 +75,7 @@ async fn main() {
 	rb.link("sqlite://:memory:").await.unwrap();
   
 	rb.exec("", "CREATE TABLE `biz_activity` ( `id` varchar(50) NOT NULL DEFAULT '', `name` varchar(255) NOT NULL, `pc_link` varchar(255) DEFAULT NULL, `h5_link` varchar(255) DEFAULT NULL, `sort` varchar(255) NOT NULL, `status` int(11) NOT NULL, `version` int(11) NOT NULL, `remark` varchar(255) DEFAULT NULL, `create_time` datetime NOT NULL, `delete_flag` int(1) NOT NULL, `pc_banner_img` varchar(255) DEFAULT NULL, `h5_banner_img` varchar(255) DEFAULT NULL, parent_id varchar(50) DEFAULT NULL, PRIMARY KEY (`id`) );").await;
+	rb.exec("", "CREATE TABLE `activity_options`( `id` varchar(50) NOT NULL DEFAULT '',  `activity_id` varchar(50) NOT NULL DEFAULT '', `create_time` datetime NOT NULL, `name` varchar(255) NOT NULL, `value` varchar(255) NOT NULL);").await;
 
   /// customize connection pool parameters (optional)
 // let mut opt =PoolOptions::new();
