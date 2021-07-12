@@ -4,6 +4,7 @@
 // https://github.com/servo/bincode
 // https://github.com/tafia/quick-xml
 // https://riptutorial.com/rust/topic/1170/serde
+// https://users.rust-lang.org/t/syn-how-do-i-iterate-on-the-fields-of-a-struct/42600/3
 
 #![allow(unused_imports)]
 
