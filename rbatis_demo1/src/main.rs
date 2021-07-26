@@ -24,7 +24,7 @@ pub struct ActivityOptions {
 /// may also write `CRUDTable` as `impl CRUDTable for BizActivity{}`
 /// #[crud_enable( table_name:biz_activity)]
 /// #[crud_enable(id_name:"id"|id_type:"String"|table_name:"biz_activity"|table_columns:"id,name,version,delete_flag"|formats_pg:"id:{}::uuid")]
-#[crud_enable( table_name:biz_activity)]
+#[crud_enable( table_name:biz_activity | table_columns:"id,name,pc_link,h5_link,pc_banner_img,h5_banner_img,sort,status,remark,create_time,version,delete_flag,parent_id")]
 #[derive(Clone, Debug)]
 pub struct BizActivity {
   pub id: Option<String>,
@@ -40,7 +40,9 @@ pub struct BizActivity {
   pub version: Option<i32>,
   pub delete_flag: Option<i32>,
   pub parent_id: Option<String>,
+#[serde(skip_serializing)]
   pub childs: Vec<BizActivity>,
+#[serde(skip_serializing)]
   pub activity_options: Vec<ActivityOptions>,
 }
 
@@ -160,7 +162,7 @@ async fn main() {
     h5_banner_img: None,
     sort: Some("MySort".to_string()),
     status: Some(1),
-    parent_id: Some("12312".to_string()),
+    parent_id: Some(activity.id.as_mut().unwrap().to_string()),
     childs: vec![],
     activity_options: vec![],
     
