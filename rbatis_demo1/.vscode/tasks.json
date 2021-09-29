@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cargo",
+			"subcommand": "build",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"group": "build",
+			"label": "Rust: cargo build - rbatis_demo1"
+		},
+		{
+			"type": "cargo",
+			"subcommand": "run",
+			"problemMatcher": [
+				"$rustc"
+			],
+			"label": "Rust: cargo run - rbatis_demo1"
+		}
+	]
+}

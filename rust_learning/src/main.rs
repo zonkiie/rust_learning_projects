@@ -9,6 +9,21 @@ fn for_test(n: i32) -> i32
 	i
 }
 
+fn num_input(question: &str) -> i32
+{
+	println!("{}", question);
+	let mut input = String::new();
+	io::stdin().read_line(&mut input)
+        .ok()
+        .expect("Failed to read line");
+	println!("Input string was: {}", input);
+	let input: i32 = input.trim().parse()
+		.ok()
+		.expect("Please type a number!");
+	println!("Input was: {}", input);
+	input
+}
+
 /*
 	match io::stdin().read_line(&mut input) {
 		Ok(_) => {
@@ -24,16 +39,7 @@ fn for_test(n: i32) -> i32
 */
 
 fn main() {
-	println!("Max Iternation:");
-	let mut input = String::new();
-	io::stdin().read_line(&mut input)
-        .ok()
-        .expect("Failed to read line");
-	println!("Input string was: {}", input);
-	let input: i32 = input.trim().parse()
-		.ok()
-		.expect("Please type a number!");
-	println!("Input was: {}", input);
+	let input = num_input("Max Iternation:");
 	let lv = for_test(input);
 	println!("Last val: {}", lv);
 }
