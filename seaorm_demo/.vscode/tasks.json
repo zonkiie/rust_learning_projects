@@ -1,0 +1,30 @@
+{
+    "tasks": [
+        {
+            "type": "cargo",
+            "subcommand": "build",
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "group": "build",
+            "label": "Rust: cargo build - seaorm_demo"
+        },
+        {
+            "type": "cargo",
+            "subcommand": "clean",
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "group": "clean",
+            "label": "Rust: cargo clean - seaorm_demo"
+        },
+        {
+            "type": "cargo",
+            "subcommand": "run",
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "label": "Rust: cargo run - seaorm_demo"
+        }
+    ]
+}
