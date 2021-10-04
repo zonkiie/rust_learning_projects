@@ -8,7 +8,7 @@ async fn create_table(db: &DbConn, stmt: &TableCreateStatement) -> Result<ExecRe
 
 pub async fn create_user_table(db: &DbConn) -> Result<ExecResult, DbErr> {
     let stmt = sea_query::Table::create()
-        .table(super::user::User)
+        .table(super::user::Entity)
         .if_not_exists()
         .col(
             ColumnDef::new(super::user::Column::Id)
@@ -18,22 +18,17 @@ pub async fn create_user_table(db: &DbConn) -> Result<ExecResult, DbErr> {
                 .primary_key(),
         )
         .col(
-            ColumnDef::new(super::user::Column::FirstName)
+            ColumnDef::new(super::user::Column::Firstname)
                 .string()
                 .not_null()
         )
         .col(
-            ColumnDef::new(super::user::Column::LastName)
+            ColumnDef::new(super::user::Column::Lastname)
                 .string()
                 .not_null()
         )
         .col(
-            ColumnDef::new(super::user::Column::Title)
-                .string()
-                .not_null(),
-        )
-        .col(
-            ColumnDef::new(super::user::Column::Text)
+            ColumnDef::new(super::user::Column::Username)
                 .string()
                 .not_null(),
         )

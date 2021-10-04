@@ -8,7 +8,7 @@ use std::env;
 use tera::Tera;
 
 mod user;
-pub use user::User as User;
+pub use user::Entity as User;
 mod setup;
 
 
