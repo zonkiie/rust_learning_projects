@@ -7,6 +7,8 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+listenfd = "0.3.3"
+tera = "1.8.0"
 sea-orm = { version = "^0.2.4", features = [ "sqlx-mysql", "sqlx-postgres", "sqlx-sqlite", "runtime-tokio-native-tls", "macros" ], default-features = false }
 
 sqlx-core = "0.5.7"
