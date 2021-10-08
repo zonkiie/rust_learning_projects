@@ -1,11 +1,9 @@
 use sea_orm::*;
 
-use listenfd::ListenFd;
 use sea_orm::DatabaseConnection;
 use sea_orm::{entity::*, query::*};
 use serde::{Deserialize, Serialize};
 use std::env;
-use tera::Tera;
 
 mod entities;
 use crate::entities::*;
@@ -23,8 +21,10 @@ struct AppState {
 
 pub async fn do_query()
 {
+    println!("Start");
     // get env vars
     dotenv::dotenv().ok();
+    /*
     let db_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set in .env file");
     let host = env::var("HOST").expect("HOST is not set in .env file");
     let port = env::var("PORT").expect("PORT is not set in .env file");
@@ -32,8 +32,39 @@ pub async fn do_query()
 
     // create post table if not exists
     let conn = sea_orm::Database::connect(&db_url).await.unwrap();
+    */
+    println!("Connect");
+    let conn: DatabaseConnection = Database::connect("sqlite::memory:").await.unwrap();
     let _ = setup::create_post_table(&conn).await;
     let _ = setup::create_user_table(&conn).await;
+
+    let u = user::ActiveModel {
+        firstname: Set("Hans".to_owned()),
+        lastname: Set("Mustermann".to_owned()),
+        username: Set("hamu".to_owned()),
+        ..Default::default()
+    };
+
+    let user_insert_res = User::insert(u)
+        .exec(&conn)
+        .await
+        .expect("could not insert user");
+    
+    let p = post::ActiveModel {
+        title: Set("Titel".to_owned()),
+        content: Set("The Content".to_owned()),
+        author: Set(user_insert_res.last_insert_id as i32),
+        ..Default::default()
+    };
+
+    let p_insert_res = Post::insert(p)
+        .exec(&conn)
+        .await
+        .expect("could not insert post");
+
+    let qu = User::find().one(&conn).await.unwrap();
+    println!("Queried User: {:?}", qu);
+
 }
 
 fn main() {
