@@ -1,3 +1,4 @@
+use std::fmt;
 use sea_orm::*;
 
 use sea_orm::DatabaseConnection;
@@ -19,9 +20,10 @@ struct AppState {
     conn: DatabaseConnection,
 }
 
-pub async fn do_query()
+pub async fn do_query() -> String
 {
-    println!("Start");
+    let mut retstr = String::new();
+    retstr.push_str("Start");
     // get env vars
     dotenv::dotenv().ok();
     /*
@@ -33,7 +35,9 @@ pub async fn do_query()
     // create post table if not exists
     let conn = sea_orm::Database::connect(&db_url).await.unwrap();
     */
-    println!("Connect");
+
+    retstr.push_str("Connect");
+
     let conn: DatabaseConnection = Database::connect("sqlite::memory:").await.unwrap();
     let _ = setup::create_post_table(&conn).await;
     let _ = setup::create_user_table(&conn).await;
@@ -63,10 +67,19 @@ pub async fn do_query()
         .expect("could not insert post");
 
     let qu = User::find().one(&conn).await.unwrap();
-    println!("Queried User: {:?}", qu);
-
+    let output = format!("Queried User: {:?}", qu);
+    //retstr.push_str(&output);
+    retstr.push_str(&(format!("Queried User: {:?}", qu)));
+    retstr
 }
 
 fn main() {
-    do_query();
+    println!("Main");
+    let mut o:String = String::new();
+    async 
+    {
+        o = do_query().await;
+    };
+    println!("Output: {}", o);
+
 }

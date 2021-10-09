@@ -19,6 +19,8 @@ serde_json = "1"
 # Date time (required)
 chrono = { version = "0.4", features = ["serde"] }
 
+futures = { version = "0.3.17", default-features = false }
+
 dotenv = "0.15"
 
 # logging lib(required)
