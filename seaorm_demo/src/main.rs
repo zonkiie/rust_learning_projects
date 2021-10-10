@@ -80,10 +80,9 @@ pub async fn do_query() -> String
 fn main() {
     println!("Main");
     //let mut o:String = String::new();
-    let o = async 
+    let mut o = async 
     {
-        let o = do_query();
-        o.await
+        do_query().await
     };
     let values = executor::block_on(o);
     println!("Output: {}", values);
