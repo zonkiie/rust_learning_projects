@@ -1,7 +1,7 @@
 use sea_orm::sea_query::{ColumnDef, TableCreateStatement};
 use sea_orm::{error::*, sea_query, DbConn, ExecResult};
 
-use crate::entities::*;
+// use crate::entities::*;
 
 
 async fn create_table(db: &DbConn, stmt: &TableCreateStatement) -> Result<ExecResult, DbErr> {

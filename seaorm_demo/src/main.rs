@@ -1,10 +1,11 @@
-use std::fmt;
+// use std::fmt;
+use futures::*;
 use sea_orm::*;
 
 use sea_orm::DatabaseConnection;
-use sea_orm::{entity::*, query::*};
-use serde::{Deserialize, Serialize};
-use std::env;
+// use sea_orm::{entity::*, query::*};
+// use serde::{Deserialize, Serialize};
+// use std::env;
 
 mod entities;
 use crate::entities::*;
@@ -66,20 +67,25 @@ pub async fn do_query() -> String
         .await
         .expect("could not insert post");
 
+    let p_id = p_insert_res.last_insert_id;
+    retstr.push_str(&(format!("Post Insert ID: {:?}", p_id)));
+    
     let qu = User::find().one(&conn).await.unwrap();
-    let output = format!("Queried User: {:?}", qu);
-    //retstr.push_str(&output);
+    // let output = format!("Queried User: {:?}", qu);
+    // retstr.push_str(&output);
     retstr.push_str(&(format!("Queried User: {:?}", qu)));
     retstr
 }
 
 fn main() {
     println!("Main");
-    let mut o:String = String::new();
-    async 
+    //let mut o:String = String::new();
+    let o = async 
     {
-        o = do_query().await;
+        let o = do_query();
+        o.await
     };
-    println!("Output: {}", o);
+    let values = executor::block_on(o);
+    println!("Output: {}", values);
 
 }
