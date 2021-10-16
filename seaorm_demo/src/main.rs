@@ -1,4 +1,5 @@
 // use std::fmt;
+use async_std::*;
 use futures::*;
 use sea_orm::*;
 
@@ -77,10 +78,11 @@ pub async fn do_query() -> String
     retstr
 }
 
-fn main() {
+#[async_std::main]
+async fn main() {
     println!("Main");
     //let mut o:String = String::new();
-    let mut o = async 
+    let o = async 
     {
         do_query().await
     };
