@@ -74,9 +74,9 @@ pub async fn do_query() -> String
     retstr.push_str(&(format!("Post Insert ID: {:?}\n", p_id)));
     
     let qu = User::find().one(&conn).await.unwrap();
-    // let output = format!("Queried User: {:?}", qu);
-    // retstr.push_str(&output);
     retstr.push_str(&(format!("Queried User: {:?}\n", qu)));
+    let qp = Post::find().one(&conn).await.unwrap();
+    retstr.push_str(&(format!("Queried Post: {:?}\n", qp)));
     retstr
 }
 
