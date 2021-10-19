@@ -1,4 +1,6 @@
-// use std::fmt;
+#[allow(unused_imports)]
+use std::fmt;
+#[allow(unused_imports)]
 use async_std::*;
 use futures::*;
 use sea_orm::*;
@@ -25,7 +27,7 @@ struct AppState {
 pub async fn do_query() -> String
 {
     let mut retstr = String::new();
-    retstr.push_str("Start");
+    retstr.push_str("Start\n");
     // get env vars
     dotenv::dotenv().ok();
     /*
@@ -38,7 +40,7 @@ pub async fn do_query() -> String
     let conn = sea_orm::Database::connect(&db_url).await.unwrap();
     */
 
-    retstr.push_str("Connect");
+    retstr.push_str("Connect\n");
 
     let conn: DatabaseConnection = Database::connect("sqlite::memory:").await.unwrap();
     let _ = setup::create_post_table(&conn).await;
@@ -69,12 +71,12 @@ pub async fn do_query() -> String
         .expect("could not insert post");
 
     let p_id = p_insert_res.last_insert_id;
-    retstr.push_str(&(format!("Post Insert ID: {:?}", p_id)));
+    retstr.push_str(&(format!("Post Insert ID: {:?}\n", p_id)));
     
     let qu = User::find().one(&conn).await.unwrap();
     // let output = format!("Queried User: {:?}", qu);
     // retstr.push_str(&output);
-    retstr.push_str(&(format!("Queried User: {:?}", qu)));
+    retstr.push_str(&(format!("Queried User: {:?}\n", qu)));
     retstr
 }
 
