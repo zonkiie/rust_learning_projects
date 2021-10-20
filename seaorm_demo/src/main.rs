@@ -73,7 +73,7 @@ pub async fn do_query() -> String
     let p_id = p_insert_res.last_insert_id;
     retstr.push_str(&(format!("Post Insert ID: {:?}\n", p_id)));
     
-    let qu = User::find().one(&conn).await.unwrap();
+    let qu = User::find().find_with_related(Post).one(&conn).await.unwrap();
     retstr.push_str(&(format!("Queried User: {:?}\n", qu)));
     let qp = Post::find().one(&conn).await.unwrap();
     retstr.push_str(&(format!("Queried Post: {:?}\n", qp)));

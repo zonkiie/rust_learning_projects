@@ -18,4 +18,10 @@ pub enum Relation {
     Post,
 }
 
+impl Related<crate::entities::post::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Post.def()
+    }
+}
+
 impl ActiveModelBehavior for ActiveModel {}
