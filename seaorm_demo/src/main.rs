@@ -5,10 +5,10 @@ use async_std::*;
 use futures::*;
 use sea_orm::*;
 
-use sea_orm::DatabaseConnection;
-// use sea_orm::{entity::*, query::*};
-// use serde::{Deserialize, Serialize};
-// use std::env;
+#[allow(unused_imports)]
+use serde::{Deserialize, Serialize};
+#[allow(unused_imports)]
+use std::env;
 
 mod entities;
 use crate::entities::*;
