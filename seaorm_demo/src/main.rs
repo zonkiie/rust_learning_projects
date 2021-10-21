@@ -8,6 +8,14 @@ use sea_orm::*;
 #[allow(unused_imports)]
 use serde::{Deserialize, Serialize};
 #[allow(unused_imports)]
+use serde::de::{DeserializeOwned};
+#[allow(unused_imports)]
+use quick_xml::de::{from_str, DeError};
+#[allow(unused_imports)]
+use quick_xml::se::to_string;
+
+
+#[allow(unused_imports)]
 use std::env;
 
 mod entities;
@@ -58,6 +66,20 @@ pub async fn do_query() -> String
         .await
         .expect("could not insert user");
     
+    let u2 = user::ActiveModel {
+        firstname: Set("Helga".to_owned()),
+        lastname: Set("Musterfrau".to_owned()),
+        username: Set("hemu".to_owned()),
+        ..Default::default()
+    };
+
+
+    let user_insert_res2 = User::insert(u2)
+    .exec(&conn)
+    .await
+    .expect("could not insert user");
+
+
     let p = post::ActiveModel {
         title: Set("Titel".to_owned()),
         content: Set("The Content".to_owned()),
@@ -73,10 +95,15 @@ pub async fn do_query() -> String
     let p_id = p_insert_res.last_insert_id;
     retstr.push_str(&(format!("Post Insert ID: {:?}\n", p_id)));
     
-    let qu = User::find().find_with_related(Post).one(&conn).await.unwrap();
+    let qu = User::find()
+        .find_with_related(Post)
+        .all(&conn)
+        .await
+        .unwrap();
+    //retstr.push_str(&to_string(&qu).unwrap());
     retstr.push_str(&(format!("Queried User: {:?}\n", qu)));
-    let qp = Post::find().one(&conn).await.unwrap();
-    retstr.push_str(&(format!("Queried Post: {:?}\n", qp)));
+    //let qp = Post::find().one(&conn).await.unwrap();
+    //retstr.push_str(&(format!("Queried Post: {:?}\n", qp)));
     retstr
 }
 
