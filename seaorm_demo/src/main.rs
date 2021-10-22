@@ -32,10 +32,8 @@ struct AppState {
     conn: DatabaseConnection,
 }
 
-pub async fn do_query() -> String
+pub async fn setup_db() -> DatabaseConnection
 {
-    let mut retstr = String::new();
-    retstr.push_str("Start\n");
     // get env vars
     dotenv::dotenv().ok();
     /*
@@ -48,12 +46,14 @@ pub async fn do_query() -> String
     let conn = sea_orm::Database::connect(&db_url).await.unwrap();
     */
 
-    retstr.push_str("Connect\n");
-
     let conn: DatabaseConnection = Database::connect("sqlite::memory:").await.unwrap();
     let _ = setup::create_post_table(&conn).await;
     let _ = setup::create_user_table(&conn).await;
+    conn
+}
 
+pub async fn insert_db(conn: &DatabaseConnection) -> bool
+{
     let u = user::ActiveModel {
         firstname: Set("Hans".to_owned()),
         lastname: Set("Mustermann".to_owned()),
@@ -62,7 +62,7 @@ pub async fn do_query() -> String
     };
 
     let user_insert_res = User::insert(u)
-        .exec(&conn)
+        .exec(conn)
         .await
         .expect("could not insert user");
     
@@ -73,9 +73,9 @@ pub async fn do_query() -> String
         ..Default::default()
     };
 
-
+#[allow(unused_variables)]
     let user_insert_res2 = User::insert(u2)
-    .exec(&conn)
+    .exec(conn)
     .await
     .expect("could not insert user");
 
@@ -87,13 +87,21 @@ pub async fn do_query() -> String
         ..Default::default()
     };
 
+    #[allow(unused_variables)]
     let p_insert_res = Post::insert(p)
-        .exec(&conn)
+        .exec(conn)
         .await
         .expect("could not insert post");
 
-    let p_id = p_insert_res.last_insert_id;
-    retstr.push_str(&(format!("Post Insert ID: {:?}\n", p_id)));
+    //let p_id = p_insert_res.last_insert_id;
+    true
+}
+
+pub async fn do_query() -> String
+{
+    let mut retstr = String::new();
+    let conn: DatabaseConnection = setup_db().await;
+    insert_db(&conn).await;
     
     let qu = User::find()
         .find_with_related(Post)
@@ -101,15 +109,12 @@ pub async fn do_query() -> String
         .await
         .unwrap();
     //retstr.push_str(&to_string(&qu).unwrap());
-    retstr.push_str(&(format!("Queried User: {:?}\n", qu)));
-    //let qp = Post::find().one(&conn).await.unwrap();
-    //retstr.push_str(&(format!("Queried Post: {:?}\n", qp)));
+    retstr.push_str(&(format!("Queried User with post: {:#?}\n", qu)));
     retstr
 }
 
 #[async_std::main]
 async fn main() {
-    println!("Main");
     //let mut o:String = String::new();
     let o = async 
     {
