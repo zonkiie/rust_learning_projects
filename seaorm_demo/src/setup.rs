@@ -70,3 +70,33 @@ pub async fn create_post_table(db: &DbConn) -> Result<ExecResult, DbErr> {
 
     create_table(db, &stmt).await
 }
+
+pub async fn create_book_table(db: &DbConn) -> Result<ExecResult, DbErr> {
+    let stmt = sea_query::Table::create()
+        .table(super::book::Entity)
+        .if_not_exists()
+        .col(
+            ColumnDef::new(super::book::Column::Id)
+                .integer()
+                .not_null()
+                .auto_increment()
+                .primary_key(),
+        )
+        .col(
+            ColumnDef::new(super::book::Column::Author)
+                .integer()
+                .not_null()
+        )
+        .col(
+            ColumnDef::new(super::book::Column::Title)
+                .string()
+                .not_null()
+        )
+        .col(
+            ColumnDef::new(super::book::Column::BookNo)
+                .integer()
+         )
+        .to_owned();
+
+    create_table(db, &stmt).await
+}

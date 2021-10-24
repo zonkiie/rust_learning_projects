@@ -10,7 +10,7 @@ edition = "2018"
 async-std = { version = "1.10.0", features = [ "attributes", "tokio1" ] }
 listenfd = "0.3.3"
 tera = "1.8.0"
-sea-orm = { version = "^0.3.0", features = [ "sqlx-mysql", "sqlx-postgres", "sqlx-sqlite", "runtime-tokio-native-tls", "macros" ], default-features = false }
+sea-orm = { version = "^0.3.1", features = [ "sqlx-mysql", "sqlx-postgres", "sqlx-sqlite", "runtime-tokio-native-tls", "macros" ], default-features = false }
 
 sqlx-core = "0.5.7"
 tokio = { version = "1.12.0", features = ["full"] }

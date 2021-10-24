@@ -23,6 +23,7 @@ use crate::entities::*;
 
 pub use entities::user::Entity as User;
 pub use entities::post::Entity as Post;
+pub use entities::book::Entity as Book;
 mod setup;
 
 
@@ -47,6 +48,7 @@ pub async fn setup_db() -> DatabaseConnection
     */
 
     let conn: DatabaseConnection = Database::connect("sqlite::memory:").await.unwrap();
+    let _ = setup::create_book_table(&conn).await;
     let _ = setup::create_post_table(&conn).await;
     let _ = setup::create_user_table(&conn).await;
     conn
@@ -73,7 +75,7 @@ pub async fn insert_db(conn: &DatabaseConnection) -> bool
         ..Default::default()
     };
 
-#[allow(unused_variables)]
+    #[allow(unused_variables)]
     let user_insert_res2 = User::insert(u2)
     .exec(conn)
     .await
@@ -93,6 +95,19 @@ pub async fn insert_db(conn: &DatabaseConnection) -> bool
         .await
         .expect("could not insert post");
 
+    let b = book::ActiveModel {
+        title: Set("Book Title".to_owned()),
+        author: Set(user_insert_res.last_insert_id as i32),
+        book_no: Set(123465),
+        ..Default::default()
+    };
+
+    #[allow(unused_variables)]
+    let b_insert_res = Book::insert(b)
+        .exec(conn)
+        .await
+        .expect("could not insert book");
+
     //let p_id = p_insert_res.last_insert_id;
     true
 }
@@ -103,13 +118,19 @@ pub async fn do_query() -> String
     let conn: DatabaseConnection = setup_db().await;
     insert_db(&conn).await;
     
-    let qu = User::find()
+    let qup = User::find()
         .find_with_related(Post)
         .all(&conn)
         .await
         .unwrap();
-    //retstr.push_str(&to_string(&qu).unwrap());
-    retstr.push_str(&(format!("Queried User with post: {:#?}\n", qu)));
+    let qub = User::find()
+        .find_with_related(Book)
+        .all(&conn)
+        .await
+        .unwrap();
+    //retstr.push_str(&to_string(&qup).unwrap());
+    retstr.push_str(&(format!("Queried User with post: {:#?}\n", qup)));
+    retstr.push_str(&(format!("Queried User with book: {:#?}\n", qub)));
     retstr
 }
 
