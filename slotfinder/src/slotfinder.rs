@@ -3,9 +3,10 @@ use std::ops::Range;
 #[allow(unused_imports)]
 use std::cmp::Ordering;
 
-fn find_next_slot<i64>(ranges: &Vec<Range<i64>>, cand: &i64) -> i64 {
+pub fn find_next_slot(ranges: &mut Vec<Range<i64>>, cand: &i64) -> i64 {
 	//let mut sorted_ranges = ranges.sort_by(|a, b| a.end.cmp(b.start).unwrap());
-	let mut sorted_ranges = ranges.sort_by(|a, b| a.cmp(b).unwrap());
+	let sorted_ranges = ranges.sort();//ranges.sort_by(|a, b| a.cmp(b));
+	println!("Sorted Arr: {:?}", sorted_ranges);
 	let found:i64 = ranges[0].start;
 	found
 }
